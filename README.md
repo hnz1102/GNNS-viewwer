@@ -50,6 +50,18 @@ production data (BOM, placement, netlist) are in [`hw/`](hw/).
 | RTC | 32.768 kHz crystal on GPIO15/16 |
 | Buttons | BOOT (GPIO0) plus three user buttons (GPIO4/5/6) |
 
+### Enclosure
+
+The 3D-printable enclosure is in [`STL/`](STL/):
+
+| File | Content |
+|------|---------|
+| [`upper.stl`](STL/upper.stl) | Upper case |
+| [`bottom.stl`](STL/bottom.stl) | Bottom case |
+| [`button.stl`](STL/button.stl) | Button |
+| [`sw-cover.stl`](STL/sw-cover.stl) | Switch cover |
+| [`GNSS-VIEWER.f3d`](STL/GNSS-VIEWER.f3d) | Fusion 360 design data (source of the STL files; open it in Autodesk Fusion to modify the enclosure and re-export) |
+
 ### Pin assignment
 
 | Function | GPIO |
@@ -253,6 +265,7 @@ satellite-viewer/
 │   ├── wolfssh/          # wolfSSH (github.com/wolfSSL/wolfssh, commit 157cb01f)
 │   └── wolfssl/          # wolfSSL/wolfCrypt (github.com/wolfSSL/wolfssl, commit b7e7e755)
 ├── hw/                   # KiCad schematic/PCB and production files
+├── STL/                  # Enclosure: STL files for 3D printing + Fusion 360 data (GNSS-VIEWER.f3d)
 ├── static/               # Embedded static files (xterm.js / css / fit addon)
 ├── cfg.toml              # Build-time default configuration (gitignored — contains credentials)
 ├── cfg.toml.tmp          # Template for cfg.toml (safe to commit)
