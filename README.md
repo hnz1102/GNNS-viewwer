@@ -260,7 +260,7 @@ satellite-viewer/
 ├── partitions.csv        # Flash partition table
 ├── setup_components.sh   # Initial setup script for components/
 ├── setup_env.sh          # One-shot environment setup (Rust, espup, udev)
-└── build-flash-images.sh # Build a merged flash image from the cfg.toml.tmp defaults
+└── build-flash-images.sh # Build merged flash images (quake_enable off / on) from the cfg.toml.tmp defaults
 ```
 
 ---
@@ -550,8 +550,10 @@ cargo espflash save-image --release --merge --chip esp32s3 complete_flash.bin
 ```
 
 To build a merged image from the `cfg.toml.tmp` defaults in one go (Wi-Fi and
-API key unset, for distribution), run `build-flash-images.sh`; the result is
-written to `flash_images/flash_satellite-viewer.bin`.  Your own `cfg.toml` is
+API key unset, for distribution), run `build-flash-images.sh`.  It builds two
+variants, written to `flash_images/`: `flash_satellite-viewer.bin`
+(`quake_enable = "false"`) and `flash_satellite-viewer-quake.bin`
+(`quake_enable = "true"`, with the [earthquake / EEW feed](#earthquakes-and-eew-p2p地震情報)).  Your own `cfg.toml` is
 restored afterwards.
 
 **Important**: When flashing a merged image, always write it to **offset 0x0**, not 0x9000. Writing to 0x9000 will result in a boot failure with "invalid header: 0xffffffff" error.
