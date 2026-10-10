@@ -1,0 +1,43 @@
+[satellite-viewer]
+wps_enable     = "true"     # "true": use WPS PBC on next boot when SSID is empty
+wifi_ssid      = ""         # your-ssid
+wifi_psk       = ""         # your-password
+ip_mode        = "dhcp"           # "dhcp" or "static"
+ip_address     = "192.168.0.200"
+subnet_mask    = "255.255.255.0"
+gateway        = "192.168.0.1"
+dns            = "1.1.1.1"
+
+syslog_server    = "192.168.0.140:514"
+syslog_enable    = "false"
+syslog_host_name = "esp32s3"
+syslog_app_name  = "satellite-viewer"
+
+ssh_user     = "admin"
+ssh_password = "sshpass"
+
+com1_tx_pin = "42"
+com1_rx_pin = "41"
+com1_baud   = "9600"
+
+display_enable = "true"
+display_port   = "com1"    # "com1"
+
+ntp_server1 = "time.aws.com"
+ntp_server2 = "time.google.com"
+ntp_server3 = "time.cloudflare.com"
+ntp_server4 = "ntp.nict.jp"
+
+adc_conversion_factor = "437.98"
+
+emmc_enable          = "true"    # "false": this unit has no eMMC chip populated — skip mount, avoids the SDMMC-failure-induced reset
+
+# P2P地震情報 (p2pquake.net) feed: recent earthquakes + emergency earthquake warnings (EEW).
+# "true": enable. Default "false" — it keeps a TLS WebSocket open (~30 KB of internal RAM)
+# and needs WiFi plus a synced clock. Data: JMA via P2P地震情報.
+quake_enable         = "false"
+
+# Google Maps Static API key — get one at https://console.cloud.google.com/ (enable "Maps Static API", see README).
+# This is only the default: the key can also be entered in the Web UI (Config > Map Settings), which overrides it.
+# Never commit a real key here; put it in your local, uncommitted cfg.toml, or leave it unset and use the Web UI.
+maps_api_key = ""

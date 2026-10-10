@@ -1,0 +1,596 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "7c915fe3-66ec-4980-a967-33c981427429")
+	(paper "A4")
+	(title_block
+		(title "GNSS Satellite Viewer")
+		(date "2026-07-01")
+		(rev "Rev.0")
+		(company "HNZ")
+		(comment 1 "Licensed under CC-BY-SA V4.0")
+		(comment 2 "(C) 2026 Hiroshi Nakajima <hnakamiru1103@gmail.com>")
+	)
+	(lib_symbols)
+	(wire
+		(pts
+			(xy 114.3 128.27) (xy 160.02 128.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1e2a090b-cd8f-4d4e-8f5e-dbc6e895c898")
+	)
+	(wire
+		(pts
+			(xy 114.3 114.3) (xy 160.02 114.3)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1ec84e26-c52d-452b-9c7e-eaffc6ecac8a")
+	)
+	(wire
+		(pts
+			(xy 128.27 73.66) (xy 128.27 104.14)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "23d9ff10-c61f-473e-a0dc-4e91a7514eb4")
+	)
+	(wire
+		(pts
+			(xy 142.24 111.76) (xy 142.24 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "296b5792-5fc9-4502-9b42-e66266fd7293")
+	)
+	(wire
+		(pts
+			(xy 114.3 111.76) (xy 142.24 111.76)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3594783a-13b6-4805-9193-32dd3db359e2")
+	)
+	(bus
+		(pts
+			(xy 158.75 63.5) (xy 138.43 63.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3f2c3fd1-523d-4d8f-a20a-2365e3ddc57b")
+	)
+	(wire
+		(pts
+			(xy 96.52 78.74) (xy 96.52 97.79)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5da9af92-1432-48c0-be81-af8ae4285e89")
+	)
+	(bus
+		(pts
+			(xy 138.43 63.5) (xy 138.43 106.68)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "74b49dcf-45d0-48a9-b1db-65a476e8b527")
+	)
+	(wire
+		(pts
+			(xy 87.63 78.74) (xy 87.63 97.79)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8f9db2e9-42d4-4416-b23c-dc7fab8e9787")
+	)
+	(wire
+		(pts
+			(xy 114.3 120.65) (xy 160.02 120.65)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "91e0eb85-b3a4-4407-87b2-d7138edb02a7")
+	)
+	(wire
+		(pts
+			(xy 114.3 125.73) (xy 160.02 125.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a0695eb6-c1d4-42cc-9214-78480b55412c")
+	)
+	(wire
+		(pts
+			(xy 114.3 118.11) (xy 160.02 118.11)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a1f65e90-8eab-4e86-b581-a50dab4a6921")
+	)
+	(wire
+		(pts
+			(xy 128.27 104.14) (xy 160.02 104.14)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c934bbb4-17e5-4f2a-a1dd-cf9b4eb2a5f4")
+	)
+	(wire
+		(pts
+			(xy 142.24 71.12) (xy 158.75 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cc013652-65ef-4c0f-b8ec-8a1f6764ee5e")
+	)
+	(wire
+		(pts
+			(xy 99.06 78.74) (xy 99.06 97.79)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e0afec17-2bf4-4154-9879-8e15e3b5dd54")
+	)
+	(bus
+		(pts
+			(xy 138.43 106.68) (xy 114.3 106.68)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e82be383-1b5c-41dc-8e64-f2d4d57aa688")
+	)
+	(wire
+		(pts
+			(xy 114.3 73.66) (xy 128.27 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ef0c7b38-55da-4a4b-a8f1-b6d31dcda5f9")
+	)
+	(sheet
+		(at 158.75 41.91)
+		(size 62.23 36.83)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "067ee453-3bd3-482a-adaa-33fcd8dd9b4a")
+		(property "Sheetname" "emmc"
+			(at 158.75 41.1984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "emmc.kicad_sch"
+			(at 158.75 79.3246 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "MMCD[0..9]" input
+			(at 158.75 63.5 180)
+			(uuid "f93617a5-d21d-49c2-b097-5abc7d7d9e6c")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "~{RST}" input
+			(at 158.75 71.12 180)
+			(uuid "8b6ac86c-ee77-4d3e-a41c-2103cf86e813")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "GNSS-satellite-viewer"
+				(path "/7c915fe3-66ec-4980-a967-33c981427429"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 45.72 97.79)
+		(size 68.58 36.83)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "92e817fb-d355-46f7-b3dc-b628570ab15e")
+		(property "Sheetname" "MPU"
+			(at 45.72 97.0784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "MPU.kicad_sch"
+			(at 45.72 135.2046 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "GNSS_RX" input
+			(at 114.3 118.11 0)
+			(uuid "8df1d1df-e4b1-4078-9c90-59c2f79499dd")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "GNSS_TX" output
+			(at 114.3 120.65 0)
+			(uuid "b2dadb95-c51f-4a28-8aa9-bbf18fbd8baa")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "MMCD[0..9]" input
+			(at 114.3 106.68 0)
+			(uuid "fd98076d-d28b-4c77-a73e-2372b8b42bb0")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "~{GNSS_RST}" output
+			(at 114.3 114.3 0)
+			(uuid "8c22ece2-fba6-4fa8-a130-7be7b941f266")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "GNSS_SCL" output
+			(at 114.3 125.73 0)
+			(uuid "8332209e-2090-47a5-910c-4adc0aa20cb8")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "GNSS_SDA" bidirectional
+			(at 114.3 128.27 0)
+			(uuid "b420ce52-b671-4917-9760-a0d576d5b1e3")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "VOL_ADC" input
+			(at 87.63 97.79 90)
+			(uuid "6efb9d2b-a81e-4860-814d-fbe5ac297062")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "USBDM" bidirectional
+			(at 96.52 97.79 90)
+			(uuid "6012b878-6608-4d2b-969c-afc430efb45f")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "USBDP" bidirectional
+			(at 99.06 97.79 90)
+			(uuid "25978299-bf27-422c-8b96-07460da4f04c")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "~{RESET}" output
+			(at 114.3 111.76 0)
+			(uuid "a2f018d4-ef4e-489c-9e17-b72ee927a7b8")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(instances
+			(project "GNSS-satellite-viewer"
+				(path "/7c915fe3-66ec-4980-a967-33c981427429"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 160.02 100.33)
+		(size 60.96 34.29)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "cd9b248e-9e50-41f0-b267-bcc460e68e20")
+		(property "Sheetname" "GNSS-RF"
+			(at 160.02 99.6184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "GNSS-RF.kicad_sch"
+			(at 160.02 135.2046 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "GNSS_RX" input
+			(at 160.02 120.65 180)
+			(uuid "0fef4ca5-f41e-4ac8-9c95-858c99fb53e9")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "GNSS_SCL" input
+			(at 160.02 125.73 180)
+			(uuid "01065a9d-0e53-43a6-9a58-4c985bd2860c")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "GNSS_SDA" bidirectional
+			(at 160.02 128.27 180)
+			(uuid "bb6ff95e-2574-4821-82a5-860094828dde")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "GNSS_TX" output
+			(at 160.02 118.11 180)
+			(uuid "d91b2459-64fe-4b71-9532-0648531c2e0e")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "V_BACKUP" input
+			(at 160.02 104.14 180)
+			(uuid "8ffbfb8c-7404-4075-a5bd-56fa1eb316fb")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "~{GNSS_RST}" input
+			(at 160.02 114.3 180)
+			(uuid "38857db3-74c6-4b4a-a941-8faee12a9c7d")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "GNSS-satellite-viewer"
+				(path "/7c915fe3-66ec-4980-a967-33c981427429"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 45.72 41.91)
+		(size 68.58 36.83)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "da3577bd-7aa9-4a82-bb88-b57ceef224d8")
+		(property "Sheetname" "power"
+			(at 45.72 41.1984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power.kicad_sch"
+			(at 45.72 79.3246 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "VOUT" output
+			(at 87.63 78.74 270)
+			(uuid "be509e5a-6fb9-4634-8e04-4da41683bcc2")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "USBDM" bidirectional
+			(at 96.52 78.74 270)
+			(uuid "f9bf3348-b114-4c2e-aade-d40bd6a4427f")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "USBDP" bidirectional
+			(at 99.06 78.74 270)
+			(uuid "22d04015-88fe-4e50-8776-0706c6f20362")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "V_VAT" output
+			(at 114.3 73.66 0)
+			(uuid "d2fd8abe-9b21-4279-be1d-9181f9f92c1d")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(instances
+			(project "GNSS-satellite-viewer"
+				(path "/7c915fe3-66ec-4980-a967-33c981427429"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)
