@@ -285,7 +285,7 @@ selected with the settings below rather than separate templates:
 | `com1_tx_pin` / `com1_rx_pin` | `42` / `41` | The GNSS receiver is wired to other pins (XIAO ESP32S3: `43` / `44`) |
 | `display_enable` | `"true"` | There is no ST7789V TFT |
 | `emmc_enable` | `"true"` | This unit has no eMMC fitted |
-| `quake_enable` | `"false"` | You want the earthquake list and EEW alerts (P2P地震情報; uses a WebSocket and ~30 KB of internal RAM) |
+| `quake_enable` | `"false"` | You want the recent-earthquake list and **EEW** (緊急地震速報, emergency earthquake warning) alerts from P2P地震情報.  Off by default: it keeps a TLS WebSocket open (~30 KB of internal RAM) and needs Wi-Fi plus a synced clock.  Read at boot only, so rebuild after changing it — see [Earthquakes and EEW](#earthquakes-and-eew-p2p地震情報) |
 
 ```toml
 [satellite-viewer]
@@ -313,7 +313,11 @@ com1_baud   = "9600"      # MAX-F10S factory default
 display_enable      = "true"
 display_port        = "com1"
 emmc_enable         = "true"    # eMMC map cache and track log
-quake_enable        = "false"   # "true": recent earthquakes + EEW alerts from p2pquake.net (TFT page, MAP overlay, Web UI)
+
+# P2P地震情報 (p2pquake.net): recent earthquakes + emergency earthquake warnings (EEW).
+# "true": enable (TFT EARTHQUAKE page, epicenters on the MAP, EEW alert that switches the
+# TFT to the MAP with the epicenter and your position, Web UI card).  Default "false".
+quake_enable        = "false"
 
 # NTP servers (up to 4, in priority order)
 ntp_server1 = "time.aws.com"
