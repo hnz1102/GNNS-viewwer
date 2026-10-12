@@ -123,7 +123,7 @@ pub fn focus_selected() -> bool {
     let q = QUAKES.lock().unwrap().get(SEL.load(Ordering::Relaxed)).cloned();
     match q {
         Some(q) => {
-            FOCUS_BY_EEW.store(false, Ordering::Relaxed);
+            AUTO_FOCUS.store(false, Ordering::Relaxed);
             *FOCUS.lock().unwrap() = Some((q.lat, q.lon));
             // M7-class quakes need a regional view; keep small ones closer.
             crate::map_display::set_zoom(if q.mag >= 6.0 { 6 } else { 8 });
@@ -137,7 +137,8 @@ pub fn focus_selected() -> bool {
 pub fn focus() -> Option<(f64, f64)> { *FOCUS.lock().unwrap() }
 
 pub fn clear_focus() {
-    FOCUS_BY_EEW.store(false, Ordering::Relaxed);
+    AUTO_FOCUS.store(false, Ordering::Relaxed);
+    clear_new_quake();
     let mut f = FOCUS.lock().unwrap();
     if f.is_some() {
         *f = None;
@@ -146,7 +147,7 @@ pub fn clear_focus() {
 }
 
 /// True while the MAP focus was set by an EEW (not picked on the quake page).
-static FOCUS_BY_EEW: AtomicBool = AtomicBool::new(false);
+static AUTO_FOCUS: AtomicBool = AtomicBool::new(false);
 
 /// Great-circle distance in km (haversine).
 pub fn distance_km(lat1: f64, lon1: f64, lat2: f64, lon2: f64) -> f64 {
@@ -169,18 +170,63 @@ pub fn own_position() -> Option<(f64, f64)> {
 /// Without a GNSS fix (or epicenter coordinates) it falls back to a regional
 /// view on whichever point is known.
 pub fn eew_view(e: &Eew) -> (f64, f64, u8, Option<f64>) {
+    fit_view(e.lat, e.lon)
+}
+
+/// Same framing for any epicenter (`lat` NaN = unknown).
+pub fn fit_view(lat: f64, lon: f64) -> (f64, f64, u8, Option<f64>) {
     let own = own_position();
-    match (own, e.lat.is_nan()) {
+    match (own, lat.is_nan()) {
         (Some((ol, oo)), false) => {
-            let (clat, clon) = ((ol + e.lat) / 2.0, (oo + e.lon) / 2.0);
+            let (clat, clon) = ((ol + lat) / 2.0, (oo + lon) / 2.0);
             let z = crate::map_display::zoom_to_fit(
-                clat, clon, ol.min(e.lat), ol.max(e.lat), oo.min(e.lon), oo.max(e.lon));
-            (clat, clon, z.min(14), Some(distance_km(ol, oo, e.lat, e.lon)))
+                clat, clon, ol.min(lat), ol.max(lat), oo.min(lon), oo.max(lon));
+            (clat, clon, z.min(14), Some(distance_km(ol, oo, lat, lon)))
         }
-        (None, false) => (e.lat, e.lon, 8, None),
+        (None, false) => (lat, lon, 8, None),
         (Some((ol, oo)), true) => (ol, oo, 8, None),
         (None, true) => (f64::NAN, f64::NAN, 8, None),
     }
+}
+
+// ─── Newly received earthquake, shown on the MAP page ────────────────────────
+
+/// How long the "new earthquake" view stays up.
+const NEWQ_SHOW_SECS: u64 = 60;
+
+struct NewQuake { q: Quake, expires: u64 }
+static NEWQ: Mutex<Option<NewQuake>> = Mutex::new(None);
+static NEWQ_VERSION: AtomicU32 = AtomicU32::new(0);
+
+/// The new earthquake being highlighted on the MAP page, if any.
+pub fn new_quake() -> Option<Quake> {
+    let g = NEWQ.lock().unwrap();
+    let n = g.as_ref()?;
+    if now_secs() < n.expires { Some(n.q.clone()) } else { None }
+}
+pub fn newq_version() -> u32 { NEWQ_VERSION.load(Ordering::Relaxed) }
+
+fn clear_new_quake() {
+    if NEWQ.lock().unwrap().take().is_some() {
+        NEWQ_VERSION.fetch_add(1, Ordering::Relaxed);
+    }
+}
+
+/// A new earthquake just arrived. If the TFT is on the MAP page (and not
+/// replaying a track, and no EEW owns the map), frame its epicenter together
+/// with this unit's position and show its details.
+fn announce_new(q: &Quake) {
+    if crate::serial_display::current_page() != crate::serial_display::PAGE_MAP { return; }
+    if crate::track_view::is_playing() || EEW.lock().unwrap().is_some() { return; }
+    let (clat, clon, zoom, _) = fit_view(q.lat, q.lon);
+    if clat.is_nan() { return; }
+    *FOCUS.lock().unwrap() = Some((clat, clon));
+    AUTO_FOCUS.store(true, Ordering::Relaxed);
+    crate::map_display::set_zoom(zoom);
+    crate::map_display::reset_last_pos();
+    *NEWQ.lock().unwrap() = Some(NewQuake { q: q.clone(), expires: now_secs() + NEWQ_SHOW_SECS });
+    NEWQ_VERSION.fetch_add(1, Ordering::Relaxed);
+    info!("[QUAKE] showing new earthquake on MAP: M{:.1} {}", q.mag, q.name);
 }
 
 /// Switch the TFT to the MAP page, framing the EEW epicenter and our position.
@@ -188,7 +234,7 @@ fn focus_eew(e: &Eew) {
     let (clat, clon, zoom, _) = eew_view(e);
     if clat.is_nan() { return; }
     *FOCUS.lock().unwrap() = Some((clat, clon));
-    FOCUS_BY_EEW.store(true, Ordering::Relaxed);
+    AUTO_FOCUS.store(true, Ordering::Relaxed);
     crate::map_display::set_zoom(zoom);
     crate::map_display::reset_last_pos();
     crate::serial_display::set_page(crate::serial_display::PAGE_MAP);
@@ -306,12 +352,16 @@ fn merge_pushed(body: &[u8]) {
         Err(e) => { info!("[QUAKE] pushed json: {:?}", e); return; }
     };
     let mut cur = QUAKES.lock().unwrap();
+    let is_new = !cur.iter().any(|o| o.time == q.time && o.lat == q.lat && o.lon == q.lon);
     cur.retain(|o| !(o.time == q.time && o.lat == q.lat && o.lon == q.lon));
     info!("[QUAKE] pushed: {} M{:.1} {}", q.time, q.mag, q.name);
-    cur.insert(0, q);
+    cur.insert(0, q.clone());
     cur.truncate(QUAKE_MAX);
     VERSION.fetch_add(1, Ordering::Relaxed);
     LAST_OK_SECS.store(now_secs() as u32, Ordering::Relaxed);
+    drop(cur);
+    // A re-issue of a known event (correction) only updates the list.
+    if is_new { announce_new(&q); }
 }
 
 /// P2P timestamps ("2026/10/10 10:23:10.944") are JST; returns unix seconds.
@@ -381,7 +431,7 @@ fn clear_eew() {
     *EEW.lock().unwrap() = None;
     EEW_VERSION.fetch_add(1, Ordering::Relaxed);
     // Hand the map back to the normal GPS-centred view (the page stays as is).
-    if FOCUS_BY_EEW.load(Ordering::Relaxed) {
+    if AUTO_FOCUS.load(Ordering::Relaxed) {
         clear_focus();
     }
 }
@@ -612,6 +662,11 @@ pub fn start() {
                 // Expire the EEW banner / TFT overlay.
                 if EEW.lock().unwrap().as_ref().map(|e| now >= e.expires).unwrap_or(false) {
                     clear_eew();
+                }
+                // Expire the "new earthquake" map view and give the map back.
+                if NEWQ.lock().unwrap().as_ref().map(|n| now >= n.expires).unwrap_or(false) {
+                    clear_new_quake();
+                    if EEW.lock().unwrap().is_none() { clear_focus(); }
                 }
 
                 // Earthquake info pushed over the WebSocket.

@@ -779,6 +779,8 @@ function updateStatus() {{
   .then(r => r.json())
   .then(d => {{
     document.getElementById('status-card').innerHTML =
+      '<span class="stat-key">Firmware Version</span><span class="stat-val"><span class="badge badge-ok">' + d.version + '</span></span>' +
+      '<span class="stat-key">Build Date</span><span class="stat-val">' + d.build + '</span>' +
       '<span class="stat-key">IP Address</span><span class="stat-val">' + d.ip + '</span>' +
       '<span class="stat-key">WiFi SSID</span><span class="stat-val">' + d.ssid + '</span>' +
       '<span class="stat-key">RSSI</span><span class="stat-val">' + rssiBar(d.rssi) + '</span>' +
@@ -1109,7 +1111,8 @@ pub fn start_http_server(state: ConfigState) -> anyhow::Result<EspHttpServer<'st
         let chip_temp = *state_stat.status.chip_temp.lock().unwrap();
         let mem = mem_info();
         let json = format!(
-            r#"{{"ip":"{ip}","ssid":"{ssid}","rssi":{rssi},"battery_voltage":{battery_voltage:.2},"chip_temp":{chip_temp:.1},"heap_int_free":{hif},"heap_int_min":{him},"heap_psram_free":{hpf},"heap_psram_min":{hpm},"display_port":"{display_port}"}}"#,
+            r#"{{"ip":"{ip}","ssid":"{ssid}","rssi":{rssi},"battery_voltage":{battery_voltage:.2},"chip_temp":{chip_temp:.1},"heap_int_free":{hif},"heap_int_min":{him},"heap_psram_free":{hpf},"heap_psram_min":{hpm},"display_port":"{display_port}","version":"{version}","build":"{build}"}}"#,
+            version = esc(FW_VERSION), build = esc(FW_BUILD),
             hif = mem.int_free, him = mem.int_min, hpf = mem.psram_free, hpm = mem.psram_min,
             ip              = esc(&ip),
             ssid            = esc(&ssid),
@@ -2125,7 +2128,8 @@ if(qp.has('lat')&&qp.has('lon')){
   const fl=parseFloat(qp.get('lat')),fo=parseFloat(qp.get('lon'));
   if(isFinite(fl)&&isFinite(fo))focus={lat:fl,lon:fo,zoom:Math.min(16,Math.max(2,parseInt(qp.get('zoom'))||8))};
 }
-let quakes=[],eew=null,qTick=0;
+let quakes=[],eew=null,qTick=0,topKey=null,newQuake=null,newUntil=0;
+const qKey=q=>q.time+'|'+q.lat+'|'+q.lon;
 const img=document.getElementById('mi');
 const oc=document.getElementById('ov'),octx=oc.getContext('2d');
 const nm=document.getElementById('nm');
@@ -2224,6 +2228,10 @@ function drawOv(){
         octx.strokeStyle='#ffffff';octx.lineWidth=1.5;
         octx.beginPath();octx.arc(p[0],p[1],r+4,0,2*Math.PI);octx.stroke();
       }
+      if(newQuake&&Date.now()<newUntil&&qKey(q)===qKey(newQuake)){
+        octx.strokeStyle='#ffffff';octx.lineWidth=1.5;
+        octx.beginPath();octx.arc(p[0],p[1],r+8,0,2*Math.PI);octx.stroke();
+      }
       const lab=(q.mag>0?'M'+q.mag.toFixed(1):'')+(q.scale>0?' I'+q.intensity:'');
       if(lab){
         octx.lineWidth=3;octx.strokeStyle='#000000';octx.strokeText(lab,p[0]+r+3,p[1]+4);
@@ -2276,6 +2284,13 @@ async function loadQuakes(){
   try{
     const q=await fetch('/api/quakes').then(r=>r.json());
     quakes=q.quakes||[];eew=q.eew||null;
+    // A quake we haven't seen before: highlight it on the map for a minute
+    // (not on the first load, which is just the existing list).
+    if(quakes.length){
+      const k=qKey(quakes[0]);
+      if(topKey!==null&&k!==topKey){newQuake=quakes[0];newUntil=Date.now()+60000;}
+      topKey=k;
+    }
     drawOv();
   }catch(e){}
 }
@@ -2303,10 +2318,12 @@ async function refresh(){
     fb.style.color=d.cur_valid?'#4ade80':'#93c5fd';
     const lat=d.cur_valid?d.cur_lat.toFixed(5)+'\u00b0':'---';
     const lon=d.cur_valid?d.cur_lon.toFixed(5)+'\u00b0':'---';
-    document.getElementById('il').textContent=focus?
+    const nq=(newQuake&&Date.now()<newUntil)?
+      'NEW: '+newQuake.time.slice(5,16)+' M'+(newQuake.mag>0?newQuake.mag.toFixed(1):'?')+' I'+newQuake.intensity+' '+newQuake.name+'  |  ':'';
+    document.getElementById('il').textContent=nq+(focus?
       'Epicenter view: '+focus.lat.toFixed(3)+'N  '+focus.lon.toFixed(3)+'E  |  Zoom: '+focus.zoom+
         '  |  Quakes: '+quakes.length+(eew?'  |  EEW ACTIVE':'')+'  |  ':
-      lat+'N  '+lon+'E  |  Zoom: '+d.zoom+'  |  Trail: '+(d.trail?d.trail.length:0)+' pts  |  Quakes: '+quakes.length+(eew?'  |  EEW ACTIVE':'');
+      lat+'N  '+lon+'E  |  Zoom: '+d.zoom+'  |  Trail: '+(d.trail?d.trail.length:0)+' pts  |  Quakes: '+quakes.length+(eew?'  |  EEW ACTIVE':''));
     if(focus){
       const a=document.getElementById('back');
       if(a)a.style.display='inline-flex';
@@ -2593,6 +2610,10 @@ async function init(){
 init();
 </script></body></html>"##.to_string()
 }
+
+/// Firmware version (Cargo.toml `version`) and build date/time (set by build.rs).
+pub const FW_VERSION: &str = env!("CARGO_PKG_VERSION");
+pub const FW_BUILD: &str = env!("BUILD_TIMESTAMP");
 
 /// Heap usage snapshot: (free, min-ever-free) in bytes for internal RAM and PSRAM.
 #[derive(Clone, Copy, Default)]

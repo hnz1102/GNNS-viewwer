@@ -105,8 +105,8 @@ GPIO4/5 act as follows:
 |-------|----------------------|
 | MAP page, live | Zoom in / out |
 | MAP page, track playback | Next / previous point (×10 once the button auto-repeats) |
-| SAVED TRACKS page | Move the highlight down / up |
-| EARTHQUAKE page | Move the highlight down / up |
+| SAVED TRACKS page | Move the highlight up / down |
+| EARTHQUAKE page | Move the highlight up / down |
 
 Buttons are debounced at 50 ms; auto-repeat starts after 400 ms and repeats
 every 300 ms.

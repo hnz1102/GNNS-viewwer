@@ -1,0 +1,6 @@
+/.vscode
+/.embuild
+/target
+/Cargo.lock
+/tools/screenshots/target
+/tools/screenshots/.tile-cache

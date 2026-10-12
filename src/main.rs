@@ -14,6 +14,7 @@ mod syslogger;
 pub mod usb_host;
 mod httpserver;
 mod gpio_ctrl;
+pub mod display_pages;
 pub mod serial_display;
 mod btn_ctrl;
 mod boot_log;

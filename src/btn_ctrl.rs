@@ -6,7 +6,7 @@
 //   Long press   (>= 10 s) : factory reset to cfg.toml defaults
 //
 // GPIO4/GPIO5 (active-low, internal pull-up) are context-sensitive:
-//   On the track-list page      : move the highlighted track (+1 / -1)
+//   On the track-list page      : move the highlight (GPIO4 = up, GPIO5 = down)
 //   On MAP page during playback : step the replayed point (+1 / -1 on the
 //                                 initial press, +10 / -10 once auto-repeat
 //                                 kicks in from holding the button)
@@ -27,16 +27,16 @@ const FACTORY_RESET_PRESS_MS: u64 = 10000;
 const ZOOM_REPEAT_DELAY_MS: u64 = 400;
 const ZOOM_REPEAT_MS: u64 = 300;
 
-/// GPIO4 action: list-select next, step playback forward, or zoom in —
+/// GPIO4 (UP, +) action: move the list highlight up, step playback forward, or zoom in —
 /// whichever applies to the currently displayed page. During playback,
 /// `repeating` (true once the button is auto-repeating, false on the
 /// initial press edge) steps 10 points at a time instead of 1, so holding
 /// the button scrubs through a long track quickly.
 fn step_plus(repeating: bool) {
     if crate::serial_display::current_page() == crate::serial_display::PAGE_QUAKE {
-        crate::quake::move_sel(1);
+        crate::quake::move_sel(-1);
     } else if crate::serial_display::current_page() == crate::serial_display::PAGE_TRACKLIST {
-        crate::track_view::list_move(1);
+        crate::track_view::list_move(-1);
     } else if crate::track_view::is_playing() {
         crate::track_view::step(if repeating { 10 } else { 1 });
     } else {
@@ -47,9 +47,9 @@ fn step_plus(repeating: bool) {
 /// GPIO5 action: mirror of [`step_plus`] in the opposite direction.
 fn step_minus(repeating: bool) {
     if crate::serial_display::current_page() == crate::serial_display::PAGE_QUAKE {
-        crate::quake::move_sel(-1);
+        crate::quake::move_sel(1);
     } else if crate::serial_display::current_page() == crate::serial_display::PAGE_TRACKLIST {
-        crate::track_view::list_move(-1);
+        crate::track_view::list_move(1);
     } else if crate::track_view::is_playing() {
         crate::track_view::step(if repeating { -10 } else { -1 });
     } else {
@@ -132,7 +132,7 @@ fn button_task(btn_pin: Gpio0, zoom_in_pin: Gpio4, zoom_out_pin: Gpio5, map_type
         }
         btn_last = btn_now;
 
-        // GPIO4: zoom in / list-select next / step playback forward
+        // GPIO4: zoom in / list-select up / step playback forward
         let zin_now = btn_zin.is_high();
         if !zin_now && zin_last {
             step_plus(false);
@@ -147,7 +147,7 @@ fn button_task(btn_pin: Gpio0, zoom_in_pin: Gpio4, zoom_out_pin: Gpio5, map_type
         }
         zin_last = zin_now;
 
-        // GPIO5: zoom out / list-select previous / step playback backward
+        // GPIO5: zoom out / list-select down / step playback backward
         let zout_now = btn_zout.is_high();
         if !zout_now && zout_last {
             step_minus(false);
